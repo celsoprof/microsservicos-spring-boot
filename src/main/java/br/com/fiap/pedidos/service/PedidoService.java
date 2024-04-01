@@ -49,4 +49,24 @@ public class PedidoService {
                 .toList();
     }
 
+    public void excluir(Long numeroPedido){
+
+        Optional<Pedido> pedidoOptional = pedidoRepository.findById(numeroPedido);
+
+        if (pedidoOptional.isPresent()){
+            pedidoRepository.delete(pedidoOptional.get());
+        } else {
+            throw new PedidoNaoEncontradoException(String.format("Pedido %s não existe!", numeroPedido));
+        }
+        Pedido pedido = new Pedido();
+
+    }
+
+    public PedidoExibicaoDto atualizar(PedidoDto pedidoDto){
+        Pedido pedido = new Pedido();
+        BeanUtils.copyProperties(pedidoDto, pedido);
+        Pedido pedidoAtualizado = pedidoRepository.save(pedido);
+        return new PedidoExibicaoDto(pedidoAtualizado);
+    }
+
 }
